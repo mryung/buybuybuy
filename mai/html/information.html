@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>宝贝信息</title>
+<link rel="stylesheet" href="../css/information.css" media="all">
+    <script type="text/javascript" src="../js/jquery-1.11.2.js"></script>
+    <script type="text/javascript">
+
+
+        function showResponse(date){
+
+            var json = eval("("+date+")");
+            var j = json[0];
+
+            var str = '<div class="biaoge">' +
+                    '                    <table width="470" border="0" align="left" cellspacing="15">' +
+                    '            <tr height="40">' +
+                    '            <td width="135"><font size="6" color="#FF0000">宝贝名称</font></td>' +
+                    '            <td bgcolor="#CCCC99" width="285"style="word-break: break-all;">'+j.goodName+'</td>' +
+                    '            </tr>' +
+                    '            <tr height="40">' +
+                    '            <td width="135"><font size="6" color="#FF0000">宝贝类别</font></td>' +
+                    '            <td bgcolor="#CCCC99"width="285"style="word-break: break-all;">'+j.goodClass+'</td>' +
+                    '            </tr>' +
+                    '            <tr height="40">' +
+                    '            <td width="135"><font size="6" color="#FF0000">宝贝价格</font></td>' +
+                    '            <td bgcolor="#CCCC99"width="285"style="word-break: break-all;">'+j.goodPrice+'</td>' +
+                    '            </tr>' +
+                    '            <tr height="40">   ' +
+                    '         <td width="135"><font size="6" color="#FF0000">购买链接</font></td>' +
+                    '            <td bgcolor="#CCCC99"width="285"style="word-break: break-all;">'+j.goodAddress+'</td>' +
+                    '            </tr>' +
+                    '            <tr height="40">' +
+                    '            <td width="135"><font size="6" color="#FF0000" >宝贝描述</font></td>' +
+                    '            <td rowspan="2" bgcolor="#CCCC99" width="285" style="word-break: break-all;">'+j.goodComment+'</td>' +
+                    '            </tr>' +
+                    '            <tr height="40">' +
+                    '            </tr>' +
+                    '            </table>' +
+                    '            </div>'
+
+
+
+
+            $("#tupian").attr("src", j.chaining);
+            $("#add").html(str);
+        }
+
+
+        $(document).ready(function () {
+
+            var url = document.URL;
+            var num = 0;
+            var n = url.indexOf("get=");
+            var m = url.indexOf("target");
+
+            var val = url.substring(n+4,m);
+
+
+            $.get('../php/information.php',{get:val},showResponse);
+
+
+            $("#btn").click(function () {
+                if($("#textarea").val() !== ""){
+                    $.get('../php/pinglun.php',{get:val,num:num,pinglun:$("#textarea").val()},lun);
+                    return;
+                }
+            });
+          var total = "";
+            function lun(data){
+                alert(data)
+                var json = eval("("+data+")");
+
+                for(var i = 0 ; i < json.num1 ;i ++) {
+                    var j = json[i];
+
+                   var table =  '<div class="pinglunqu">' +
+                                   '<div id="content">'+ j.messegeText+'</div>' +
+                                   '<div class="yonghuming">用户名:'+ j.userName+'</div>' +
+                                   '<div class="pinglunshijian">评论时间:'+ j.date+'</div>' +
+                                '</div>' +
+                                ' <div class="kongbai"></div>';
+
+                    total += table;
+                }
+
+                $("#maimai").html(total);
+
+            }
+
+
+        });
+
+
+
+
+    </script>
+</head>
+<body bgcolor="#EDEDE2">
+	<div class="quanbu">
+		<img id="logo" src="../images/logo.png" class="logo">
+		<img id="tupian" src="../images/information/tu.png" class="tu">
+        <div id = "add"></div>
+		<div style="position: absolute;left: 80px;top: 670px;" >
+		    <font size="6" color="#FF0000">评论</font>
+		</div>
+		<!--<form action="" method="get" name="pinglun">-->
+			<textarea name="textarea" cols="60" rows="6" class="boxes" id="textarea"></textarea>
+			<input type="image" src="../images/information/fabiao.png" id="btn" style="position: absolute;left:745px;top:760px;">
+		<!--</form>-->
+        <div class="zhenglou" id="maimai"></div>
+    </div>
+</body>
+</html>
